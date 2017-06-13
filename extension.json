@@ -1,0 +1,26 @@
+{
+	"name": "AutoSetPageLang",
+	"version": "0.1.0",
+	"author": [
+		"Pierre Boutet"
+	],
+	"url": "https://github.com/wikifab/AutoSetPageLang",
+	"descriptionmsg": "autosetpagelang-desc",
+	"license-name": "MIT",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.28.0"
+	},
+	"config": {
+		"AutoSetPageLang-enable": true
+	},
+	"Hooks": {
+		"PageContentInsertComplete": [
+			"AutoSetPageLang\\Hooks::onPageContentInsertComplete"
+		]
+	},
+	"AutoloadClasses": {
+		"AutoSetPageLang\\Hooks": "includes/Hooks.php"
+	},
+	"manifest_version": 1
+}
