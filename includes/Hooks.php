@@ -42,8 +42,8 @@ class Hooks {
 		$languageCode = $targetTitle->getPageLanguage()->getCode();
 
 		foreach ($templatesToUpdate as $templateName) {
-			if(preg_match('/\{\{' . $templateName . 'Tuto Details([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . "Language=$languageCode\n|", $targetContent);
+			if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
+				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|", $targetContent);
 			}
 		}
 	}
