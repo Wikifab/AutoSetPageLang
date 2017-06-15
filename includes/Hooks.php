@@ -4,6 +4,8 @@ namespace AutoSetPageLang;
 use User;
 use Revision;
 use SpecialPageLanguage;
+use Title;
+use WikitextContent;
 
 
 class Hooks {
@@ -24,4 +26,51 @@ class Hooks {
 			$specialLang->onSubmit($data);
 		}
 	}
+
+	/**
+	 * Hook to add "Language" property in semantic pages
+	 *
+	 * @param unknown $form
+	 * @param \Title $targetTitle
+	 * @param unknown $targetContent
+	 */
+	public static function onPageFormsWritePageData( $form, Title $targetTitle, & $targetContent ){
+
+		$templatesToUpdate = [
+				'Tuto Details'
+		];
+		$languageCode = $targetTitle->getPageLanguage()->getCode();
+
+		foreach ($templatesToUpdate as $templateName) {
+			if(preg_match('/\{\{' . $templateName . 'Tuto Details([\s])*\|/', $targetContent, $match)) {
+				$targetContent = str_replace($match[0], $match[0] . "Language=$languageCode\n|", $targetContent);
+			}
+		}
+	}
+
+
+	/**
+	 * watch PagecontentSave hook to change "|Language=<code>" to the code of the target language of translated page (set in url)
+	 * @param \Wikipage $wikipage
+	 * @param \User $user
+	 * @param \Content $content
+	 * @param unknown $summary
+	 * @param unknown $flags
+	 */
+	public static function onPageContentSave( &$wikipage, &$user, &$content, &$summary, $flags){
+
+		$titleKeyArray = explode('/',$wikipage->getTitle()->getDBkey());
+
+		if(count($titleKeyArray) < 2) {
+			return;
+		}
+		$languageCode = end($titleKeyArray);
+
+		if ($content instanceof WikitextContent) {
+			$text = $content->getNativeData();
+			$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
+			$content = new \WikitextContent($text);
+		}
+	}
+
 }
