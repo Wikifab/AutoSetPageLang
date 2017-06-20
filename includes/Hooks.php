@@ -43,7 +43,7 @@ class Hooks {
 
 		foreach ($templatesToUpdate as $templateName) {
 			if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|", $targetContent);
+				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
 			}
 		}
 	}
@@ -69,6 +69,7 @@ class Hooks {
 		if ($content instanceof WikitextContent) {
 			$text = $content->getNativeData();
 			$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
+			$text = preg_replace("/\\|IsTranslation=([a-zA-Z-0-9]+)\n/", "|IsTranslation=1\n", $text);
 			$content = new \WikitextContent($text);
 		}
 	}
