@@ -46,6 +46,7 @@ class Hooks {
 				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
 			}
 		}
+		$targetContent = str_replace("\r\n", "\n", $targetContent);
 	}
 
 
