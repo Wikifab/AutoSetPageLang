@@ -95,5 +95,4 @@ class Hooks {
 		$job = new AutoMarkTranslateJob( $title, [] );
 		JobQueueGroup::singleton()->push( $job );
 	}
-
 }

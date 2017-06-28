@@ -3,8 +3,6 @@
 
 AutoSetPageLang is a mediawiki extension to set automatically the page lang attribute at page creation, using current language of user wich create the page.
 
-It also add a "Language" property to semantic pages, with the current language 
-For now only on template named "Tuto Details", this must be parametized
 
 ## Features
 
@@ -14,6 +12,7 @@ For now only on template named "Tuto Details", this must be parametized
 For now, this in only on template named "Tuto Details", this must be parametized
 
 * Automaticaly set Page revision as ready to be translate when property "complete" is set to "Yes" ( to activate it, set $wgAutoSetPageLangAutoMarkTranslate = true; )
+
 
 
 ## Installation
