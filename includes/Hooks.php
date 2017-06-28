@@ -6,7 +6,7 @@ use Revision;
 use SpecialPageLanguage;
 use Title;
 use WikitextContent;
-
+use JobQueueGroup;
 
 class Hooks {
 
@@ -60,6 +60,7 @@ class Hooks {
 	 */
 	public static function onPageContentSave( &$wikipage, &$user, &$content, &$summary, $flags){
 
+		// update Page lang for translated pages :
 		$titleKeyArray = explode('/',$wikipage->getTitle()->getDBkey());
 
 		if(count($titleKeyArray) < 2) {
@@ -73,6 +74,26 @@ class Hooks {
 			$text = preg_replace("/\\|IsTranslation=([a-zA-Z-0-9]+)\n/", "|IsTranslation=1\n", $text);
 			$content = new \WikitextContent($text);
 		}
+
+	}
+
+	public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId ) {
+
+		self::checkAndMarkForTranslate($article->getTitle());
+	}
+
+	public static function checkAndMarkForTranslate (\Title $title) {
+		global $wgAutoSetPageLangAutoMarkTranslate;
+
+		if ( ! $wgAutoSetPageLangAutoMarkTranslate) {
+			return;
+		}
+		if ( $title->getNamespace() != NS_MAIN) {
+			return;
+		}
+
+		$job = new AutoMarkTranslateJob( $title, [] );
+		JobQueueGroup::singleton()->push( $job );
 	}
 
 }

@@ -12,7 +12,7 @@
 		"MediaWiki": ">= 1.28.0"
 	},
 	"config": {
-		"AutoSetPageLang-enable": true
+		"AutoSetPageLangAutoMarkTranslate": true
 	},
 	"Hooks": {
 		"PageContentInsertComplete": [
@@ -23,10 +23,18 @@
 		],
 		"PageContentSave" : [
 			"AutoSetPageLang\\Hooks::onPageContentSave"
+		],
+		"PageContentSaveComplete" : [
+			"AutoSetPageLang\\Hooks::onPageContentSaveComplete"
 		]
 	},
+	"JobClasses": {
+		"autoMarkTranslate": "AutoSetPageLang\\AutoMarkTranslateJob"
+	},
 	"AutoloadClasses": {
-		"AutoSetPageLang\\Hooks": "includes/Hooks.php"
+		"AutoSetPageLang\\Hooks": "includes/Hooks.php",
+		"AutoSetPageLang\\AutoMarkTranslateJob": "includes/AutoMarkTranslateJob.php",
+		"AutoSetPageLang\\FauxSpecialPageTranslation": "includes/FauxSpecialPageTranslation.php"
 	},
 	"manifest_version": 1
 }
