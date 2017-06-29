@@ -10,6 +10,11 @@ use JobQueueGroup;
 
 class Hooks {
 
+	/**
+	 * watch Hook:PageContentInsertComplete
+	 * when a new page is created, set page Language to the user's actual language
+	 *
+	 */
 	public static function onPageContentInsertComplete(\WikiPage $wikiPage, User $user, $content, $summary, $isMinor, $isWatch, $section, $flags, Revision $revision ) {
 		global $wgLang;
 
@@ -52,6 +57,8 @@ class Hooks {
 
 	/**
 	 * watch PagecontentSave hook to change "|Language=<code>" to the code of the target language of translated page (set in url)
+	 *
+	 * It also remove 'translate' tags if page not complete
 	 * @param \Wikipage $wikipage
 	 * @param \User $user
 	 * @param \Content $content
@@ -59,19 +66,27 @@ class Hooks {
 	 * @param unknown $flags
 	 */
 	public static function onPageContentSave( &$wikipage, &$user, &$content, &$summary, $flags){
-
-		// update Page lang for translated pages :
-		$titleKeyArray = explode('/',$wikipage->getTitle()->getDBkey());
-
-		if(count($titleKeyArray) < 2) {
-			return;
-		}
-		$languageCode = end($titleKeyArray);
+		global $wgAutoSetPageLangTranslateOnCompleteOnly;
 
 		if ($content instanceof WikitextContent) {
 			$text = $content->getNativeData();
-			$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
-			$text = preg_replace("/\\|IsTranslation=([a-zA-Z-0-9]+)\n/", "|IsTranslation=1\n", $text);
+
+			// update Page lang for translated pages :
+			$titleKeyArray = explode('/',$wikipage->getTitle()->getDBkey());
+			if (count($titleKeyArray) >= 2) {
+				// if this is a translated page, we update his property
+				$languageCode = end($titleKeyArray);
+				$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
+				$text = preg_replace("/\\|IsTranslation=([a-zA-Z-0-9]+)\n/", "|IsTranslation=1\n", $text);
+			}
+
+			if ($wgAutoSetPageLangTranslateOnCompleteOnly) {
+				if (strpos($text, 'Tuto Status') !== false && strpos($text, '|Complete=Yes') === false) {
+					// if tuto is not complete, remove translate tags :
+					$text = str_replace(['<translate>','</translate>'], ['',''], $text);
+				}
+			}
+
 			$content = new \WikitextContent($text);
 		}
 

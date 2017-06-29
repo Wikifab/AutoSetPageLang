@@ -12,7 +12,8 @@
 		"MediaWiki": ">= 1.28.0"
 	},
 	"config": {
-		"AutoSetPageLangAutoMarkTranslate": true
+		"AutoSetPageLangAutoMarkTranslate": true,
+		"AutoSetPageLangTranslateOnCompleteOnly": true
 	},
 	"Hooks": {
 		"PageContentInsertComplete": [

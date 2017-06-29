@@ -13,6 +13,7 @@ For now, this in only on template named "Tuto Details", this must be parametized
 
 * Automaticaly set Page revision as ready to be translate when property "complete" is set to "Yes" ( to activate it, set $wgAutoSetPageLangAutoMarkTranslate = true; )
 
+* remove <translate> tags for all tutorials that are not 'complete'
 
 
 ## Installation
@@ -29,7 +30,11 @@ $wgGroupPermissions['user']['pagelang'] = true;
 
 ## Configuration
 
-To enable auto-mark page as ready to be translate : 
+To disable auto-mark page as ready to be translate : 
 ```
-$wgAutoSetPageLangAutoMarkTranslate = true;
+$wgAutoSetPageLangAutoMarkTranslate = false;
+```
+To disable remove translate tags on all tutorial not complete : 
+```
+$wgAutoSetPageLangTranslateOnCompleteOnly = false;
 ```
