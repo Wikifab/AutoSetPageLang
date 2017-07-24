@@ -40,11 +40,17 @@ class Hooks {
 	 * @param unknown $targetContent
 	 */
 	public static function onPageFormsWritePageData( $form, Title $targetTitle, & $targetContent ){
+		global $wgLang;
 
 		$templatesToUpdate = [
 				'Tuto Details'
 		];
-		$languageCode = $targetTitle->getPageLanguage()->getCode();
+		if ($targetTitle->exists()) {
+			$languageCode = $targetTitle->getPageLanguage()->getCode();
+		} else {
+			$languageCode = $wgLang->getCode();
+		}
+
 
 		foreach ($templatesToUpdate as $templateName) {
 			if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
