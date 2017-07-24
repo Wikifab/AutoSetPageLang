@@ -33,6 +33,38 @@ class Hooks {
 	}
 
 	/**
+	 * Hook to add class in body content
+	 *
+	 * @param \OutputPage $output
+	 * @param \Skin $skin
+	 * @param array $bodyAttrs
+	 */
+	public static function onOutputPageBodyAttributes( \OutputPage $output, $skin, & $bodyAttrs ){
+		global $wgLang;
+		$pageTitle = $output->getTitle();
+		if ( ! $pageTitle || $pageTitle->getNamespace() != NS_MAIN) {
+			return ;
+		}
+
+		$titleKeyArray = explode('/',$pageTitle->getDBkey());
+		if (count($titleKeyArray) >= 2) {
+			$bodyAttrs['class'] .= " bodyTranslatedPage";
+		} else {
+			$bodyAttrs['class'] .= " bodyTranslateSourcePage";
+		}
+
+		if ($pageTitle->getPageLanguage()->getCode() == $wgLang->getCode()) {
+			$bodyAttrs['class'] .= " bodyPageInUserLanguage";
+		} else {
+			$bodyAttrs['class'] .= " bodyPageInOtherLanguage";
+
+		}
+	}
+
+
+
+
+	/**
 	 * Hook to add "Language" property in semantic pages
 	 *
 	 * @param unknown $form

@@ -27,6 +27,9 @@
 		],
 		"PageContentSaveComplete" : [
 			"AutoSetPageLang\\Hooks::onPageContentSaveComplete"
+		],
+		"OutputPageBodyAttributes" :  [
+			"AutoSetPageLang\\Hooks::onOutputPageBodyAttributes"
 		]
 	},
 	"JobClasses": {
