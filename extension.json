@@ -30,7 +30,18 @@
 		],
 		"OutputPageBodyAttributes" :  [
 			"AutoSetPageLang\\Hooks::onOutputPageBodyAttributes"
+		],
+		"BeforePageDisplay": [
+			"AutoSetPageLang\\Hooks::onBeforePageDisplay"
 		]
+	},
+	"ResourceModules": {
+		"ext.autosetpagelang": {
+			"styles": "style.css",
+			"position": "top",
+			"localBasePath":  "resources",
+			"remoteExtPath": "AutoSetPageLang/resources"
+		}
 	},
 	"JobClasses": {
 		"autoMarkTranslate": "AutoSetPageLang\\AutoMarkTranslateJob"

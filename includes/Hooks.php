@@ -10,6 +10,13 @@ use JobQueueGroup;
 
 class Hooks {
 
+	public static function onBeforePageDisplay($output) {
+
+		$output->addModules( [
+				'ext.autosetpagelang'
+		] );
+	}
+
 	/**
 	 * watch Hook:PageContentInsertComplete
 	 * when a new page is created, set page Language to the user's actual language
