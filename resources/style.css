@@ -1,0 +1,7 @@
+body.bodyTranslateSourcePage .mw-pt-translate-header {
+	display:none;
+}
+
+body.bodyTranslateSourcePage .mw-pt-translate-header + hr {
+	display:none;
+}
