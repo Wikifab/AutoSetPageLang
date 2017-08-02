@@ -33,6 +33,12 @@
 		],
 		"BeforePageDisplay": [
 			"AutoSetPageLang\\Hooks::onBeforePageDisplay"
+		],
+		"SkinTemplateTabs": [
+			"AutoSetPageLang\\Hooks::displayTab"
+		],
+		"SkinTemplateNavigation": [
+			"AutoSetPageLang\\Hooks::displayTab2"
 		]
 	},
 	"ResourceModules": {

@@ -15,6 +15,8 @@ For now, this in only on template named "Tuto Details", this must be parametized
 
 * remove <translate> tags for all tutorials that are not 'complete'
 
+* add a translate tab, to each page ready to be translated, and when user has translate rights
+
 
 ## Installation
 

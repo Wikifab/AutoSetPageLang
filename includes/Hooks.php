@@ -1,12 +1,14 @@
 <?php
 namespace AutoSetPageLang;
 
-use User;
+use JobQueueGroup;
 use Revision;
 use SpecialPageLanguage;
+use SpecialPage;
 use Title;
+use TranslatablePage;
+use User;
 use WikitextContent;
-use JobQueueGroup;
 
 class Hooks {
 
@@ -156,5 +158,88 @@ class Hooks {
 
 		$job = new AutoMarkTranslateJob( $title, [] );
 		JobQueueGroup::singleton()->push( $job );
+	}
+
+	/**
+	 * Adds an "action" (i.e., a tab) to translate the current article
+	 */
+	static function displayTab( \SkinTemplate $obj, &$content_actions ) {
+		if ( method_exists ( $obj, 'getTitle' ) ) {
+			$title = $obj->getTitle();
+		} else {
+			$title = $obj->mTitle;
+		}
+
+		if (! $title) {
+			return true;
+		}
+		$page = TranslatablePage::newFromTitle( $title );
+		if (!$page) {
+			return true;
+		}
+
+		$user = $obj->getUser();
+
+		if ( !$user || ! $user->isAllowed( 'translate' ) ) {
+			return true;
+		}
+
+
+		$marked = $page->getMarkedTag();
+
+		$actions = [];
+		if ( ! $marked  ) {
+			// if not marked as translatable, do not show tab
+			return true;
+		}
+
+
+		$langCode = $obj->getLanguage()->getCode();
+
+		$translatePage = SpecialPage::getTitleFor( 'Translate' );
+		$url = $translatePage->getLinkURL( [
+						'group' => $page->getMessageGroupId(),
+						'language' => $langCode,
+						'action' => 'page',
+						'filter' => '',
+				], false );
+
+
+		$translate_tab = array(
+				'text' => wfMessage( 'tpt-tab-translate' )->text(),
+				'href' => $url
+		);
+
+		$tab_keys = array_keys( $content_actions );
+		$tab_values = array_values( $content_actions );
+		$edit_tab_location = array_search( 'edit', $tab_keys );
+
+		// If there's no 'edit' tab, look for the 'view source' tab
+		// instead.
+		if ( $edit_tab_location == null ) {
+			$edit_tab_location = array_search( 'viewsource', $tab_keys );
+		}
+
+		// This should rarely happen, but if there was no edit *or*
+		// view source tab, set the location index to -1, so the
+		// tab shows up near the end.
+		if ( $edit_tab_location == null ) {
+			$edit_tab_location = - 1;
+		}
+		array_splice( $tab_keys, $edit_tab_location, 0, 'translate' );
+		array_splice( $tab_values, $edit_tab_location, 0, array( $translate_tab ) );
+		$content_actions = array();
+		for ( $i = 0; $i < count( $tab_keys ); $i++ ) {
+			$content_actions[$tab_keys[$i]] = $tab_values[$i];
+		}
+
+		return true;
+
+	}
+
+	static function displayTab2( $obj, &$links ) {
+		// the old '$content_actions' array is thankfully just a
+		// sub-array of this one
+		return self::displayTab( $obj, $links['views'] );
 	}
 }
