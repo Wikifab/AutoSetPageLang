@@ -27,7 +27,16 @@ class Hooks {
 	public static function onPageContentInsertComplete(\WikiPage $wikiPage, User $user, $content, $summary, $isMinor, $isWatch, $section, $flags, Revision $revision ) {
 		global $wgLang;
 
+		// set page language to current language of user :
 		if ($wikiPage->getTitle()->getNamespace() == NS_MAIN && $wgLang) {
+
+			$sourcePageTranslatable = \TranslatablePage::isTranslationPage( $wikiPage->getTitle() );
+			//var_dump($page); echo "<br/>";
+			if ($sourcePageTranslatable) {
+				// if this is a translated page, do not change his language !!
+				return;
+			}
+
 			$specialLang = new SpecialPageLanguage();
 			$data = [
 					'pagename' => $wikiPage->getTitle()->getDBkey(),
