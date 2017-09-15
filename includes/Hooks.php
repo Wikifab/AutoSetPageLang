@@ -101,8 +101,14 @@ class Hooks {
 			$languageCode = $wgLang->getCode();
 		}
 
-
 		foreach ($templatesToUpdate as $templateName) {
+
+			// this is based on str search an regexp,
+			// it would be better if it extract properly semantic properties
+			if(strpos($targetContent, "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0") !== false) {
+				continue;
+			}
+
 			if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
 				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
 			} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
