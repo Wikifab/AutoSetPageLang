@@ -137,7 +137,10 @@ class Hooks {
 
 			// update Page lang for translated pages :
 			$titleKeyArray = explode('/',$wikipage->getTitle()->getDBkey());
-			if (count($titleKeyArray) >= 2) {
+
+			$sourcePageTranslatable = \TranslatablePage::isTranslationPage( $wikipage->getTitle() );
+			//var_dump($page); echo "<br/>";
+			if ($sourcePageTranslatable) {
 				// if this is a translated page, we update his property
 				$languageCode = end($titleKeyArray);
 				$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
