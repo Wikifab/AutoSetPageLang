@@ -105,14 +105,14 @@ class Hooks {
 
 			// this is based on str search an regexp,
 			// it would be better if it extract properly semantic properties
-			if(strpos($targetContent, "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0") !== false) {
+			if(strpos($targetContent, "SourceLanguage=none\n|Language=$languageCode\n|IsTranslation=0") !== false) {
 				continue;
 			}
 
 			if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
+				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=none\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
 			} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=$languageCode\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
+				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=none\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
 			}
 		}
 		$targetContent = str_replace("\r\n", "\n", $targetContent);
@@ -141,8 +141,13 @@ class Hooks {
 			$sourcePageTranslatable = \TranslatablePage::isTranslationPage( $wikipage->getTitle() );
 			//var_dump($page); echo "<br/>";
 			if ($sourcePageTranslatable) {
-				// if this is a translated page, we update his property
 				$languageCode = end($titleKeyArray);
+				$sourceLanguage =  $sourcePageTranslatable->getTitle()->getPageLanguage()->getCode();
+				if ($sourceLanguage == $languageCode) {
+					$sourceLanguage = 'none';
+				}
+				// if this is a translated page, we update his property
+				$text = preg_replace("/\\|SourceLanguage=([a-zA-Z-]+)\n/", "|SourceLanguage=$sourceLanguage\n", $text);
 				$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
 				$text = preg_replace("/\\|IsTranslation=([a-zA-Z-0-9]+)\n/", "|IsTranslation=1\n", $text);
 			}
