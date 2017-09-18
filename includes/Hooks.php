@@ -14,7 +14,7 @@ class Hooks {
 
 	public static function onBeforePageDisplay($output) {
 
-		$output->addModules( [
+		$output->addModuleStyles( [
 				'ext.autosetpagelang'
 		] );
 	}
