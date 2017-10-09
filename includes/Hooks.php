@@ -93,7 +93,8 @@ class Hooks {
 		global $wgLang;
 
 		$templatesToUpdate = [
-				'Tuto Details'
+				'Tuto Details',
+				'BlogPost'
 		];
 		if ($targetTitle->exists()) {
 			$languageCode = $targetTitle->getPageLanguage()->getCode();
