@@ -41,7 +41,8 @@ class Hooks {
 			$data = [
 					'pagename' => $wikiPage->getTitle()->getDBkey(),
 					'language' => $wgLang->getCode(),
-					'selectoptions' => 0
+					'selectoptions' => 0,
+					'reason' => 'Autoset Page Language'
 			];
 			if ( ! $data['language']) {
 				return ;
