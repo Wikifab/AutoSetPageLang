@@ -37,10 +37,16 @@ class Hooks {
 				return;
 			}
 
+			$codeLang = $wgLang->getCode();
+			$contentLang = self::getPageLanguageFromContent($content);
+			if($contentLang) {
+				$codeLang = $contentLang;
+			}
+
 			$specialLang = new SpecialPageLanguage();
 			$data = [
 					'pagename' => $wikiPage->getTitle()->getDBkey(),
-					'language' => $wgLang->getCode(),
+					'language' => $codeLang,
 					'selectoptions' => 0,
 					'reason' => 'Autoset Page Language'
 			];
@@ -49,6 +55,15 @@ class Hooks {
 			}
 			$specialLang->onSubmit($data);
 		}
+	}
+
+	public static function getPageLanguageFromContent(\WikitextContent $content) {
+
+		if($content && preg_match('/^\|Language=([a-z]{2})$/m', $content->getNativeData(), $match)) {
+			var_dump($match);
+			return $match[1];
+		}
+		return false;
 	}
 
 	/**
