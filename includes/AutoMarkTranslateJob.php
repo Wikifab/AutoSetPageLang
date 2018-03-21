@@ -31,8 +31,17 @@ class AutoMarkTranslateJob extends Job {
 			return true;
 		}
 
+		$completeValues = ['Yes', 'Published'];
+		$isComplete = false;
+		foreach ($completeValues as $completeValue) {
+			if (strpos($content, "|Complete=$completeValues") !== false) {
+				$isComplete = true;
+				break;
+			}
+		}
+
 		// check that content contain "Complete=Yes"
-		if (strpos($content, "|Complete=Yes") !== false && strpos($content, "<translate") !== false) {
+		if ($isComplete  && strpos($content, "<translate") !== false) {
 
 			$specialPageTranslation = new FauxSpecialPageTranslation();
 
