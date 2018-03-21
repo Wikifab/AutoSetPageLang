@@ -34,7 +34,7 @@ class AutoMarkTranslateJob extends Job {
 		$completeValues = ['Yes', 'Published'];
 		$isComplete = false;
 		foreach ($completeValues as $completeValue) {
-			if (strpos($content, "|Complete=$completeValues") !== false) {
+			if (strpos($content, "|Complete=$completeValue") !== false) {
 				$isComplete = true;
 				break;
 			}
