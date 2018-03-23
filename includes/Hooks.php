@@ -173,7 +173,7 @@ class Hooks {
 				$completeValues = ['Yes', 'Published'];
 				$isComplete = false;
 				foreach ($completeValues as $completeValue) {
-					if (strpos($content, "|Complete=$completeValue") !== false) {
+					if (strpos($text, "|Complete=$completeValue") !== false) {
 						$isComplete = true;
 						break;
 					}
