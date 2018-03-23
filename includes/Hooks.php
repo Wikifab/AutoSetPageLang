@@ -170,7 +170,15 @@ class Hooks {
 			}
 
 			if ($wgAutoSetPageLangTranslateOnCompleteOnly) {
-				if (strpos($text, 'Tuto Status') !== false && strpos($text, '|Complete=Yes') === false) {
+				$completeValues = ['Yes', 'Published'];
+				$isComplete = false;
+				foreach ($completeValues as $completeValue) {
+					if (strpos($content, "|Complete=$completeValue") !== false) {
+						$isComplete = true;
+						break;
+					}
+				}
+				if (strpos($text, 'Tuto Status') !== false && ! $isComplete) {
 					// if tuto is not complete, remove translate tags :
 					$text = str_replace(['<translate>','</translate>'], ['',''], $text);
 				}
