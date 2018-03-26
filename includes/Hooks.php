@@ -110,7 +110,8 @@ class Hooks {
 
 		$templatesToUpdate = [
 				'Tuto Details',
-				'BlogPost'
+				'BlogPost',
+				'WikiPAge'
 		];
 		if ($targetTitle->exists()) {
 			$languageCode = $targetTitle->getPageLanguage()->getCode();
