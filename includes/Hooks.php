@@ -112,7 +112,8 @@ class Hooks {
 				'Tuto Details',
 				'BlogPost',
 				'WikiPage',
-				'DescriptionDetails'
+				'DescriptionDetails',
+				'Item'
 		];
 		if ($targetTitle->exists()) {
 			$languageCode = $targetTitle->getPageLanguage()->getCode();
