@@ -60,7 +60,6 @@ class Hooks {
 	public static function getPageLanguageFromContent(\WikitextContent $content) {
 
 		if($content && preg_match('/^\|Language=([a-z]{2})$/m', $content->getNativeData(), $match)) {
-			var_dump($match);
 			return $match[1];
 		}
 		return false;
