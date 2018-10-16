@@ -34,7 +34,7 @@ class Hooks {
 			//var_dump($page); echo "<br/>";
 			if ($sourcePageTranslatable) {
 				// if this is a translated page, do not change his language !!
-				return;
+				return true;
 			}
 
 			$codeLang = $wgLang->getCode();
@@ -51,10 +51,11 @@ class Hooks {
 					'reason' => 'Autoset Page Language'
 			];
 			if ( ! $data['language']) {
-				return ;
+				return true;
 			}
 			$specialLang->onSubmit($data);
 		}
+		return true;
 	}
 
 	public static function getPageLanguageFromContent(\WikitextContent $content) {
