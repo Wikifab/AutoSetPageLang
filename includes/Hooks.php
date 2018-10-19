@@ -195,6 +195,8 @@ class Hooks {
 	public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId ) {
 
 		self::checkAndMarkForTranslate($article->getTitle());
+		return true;
+
 	}
 
 	public static function checkAndMarkForTranslate (\Title $title) {
