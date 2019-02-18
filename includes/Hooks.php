@@ -34,7 +34,7 @@ class Hooks {
 			//var_dump($page); echo "<br/>";
 			if ($sourcePageTranslatable) {
 				// if this is a translated page, do not change his language !!
-				return true;
+				return;
 			}
 
 			$codeLang = $wgLang->getCode();
@@ -51,11 +51,10 @@ class Hooks {
 					'reason' => 'Autoset Page Language'
 			];
 			if ( ! $data['language']) {
-				return true;
+				return ;
 			}
 			$specialLang->onSubmit($data);
 		}
-		return true;
 	}
 
 	public static function getPageLanguageFromContent(\WikitextContent $content) {
@@ -95,8 +94,21 @@ class Hooks {
 		}
 	}
 
-
-
+	//Return all Semantic Properties with Values for given Title object
+    public static function getSMWPropertyValuesForTitle(Title $oTitle){
+		$store = \SMW\StoreFactory::getStore()->getSemanticData( \SMW\DIWikiPage::newFromTitle( $oTitle ) );
+		//$store instanceof SMWSql3StubSemanticData;
+		$arrSMWProps = $store->getProperties();
+		$arrValues = [ ];
+		foreach ( $arrSMWProps as $smwProp ) {
+			//$smwProp instanceof SMW\DIProperty;
+			$arrSMWPropValues = $store->getPropertyValues( $smwProp );
+			foreach ( $arrSMWPropValues as $smwPropValue ) {
+				$arrValues[ $smwProp->getLabel() ][] = $smwPropValue->getSerialization();
+			}
+		}
+		return $arrValues;
+	}
 
 	/**
 	 * Hook to add "Language" property in semantic pages
@@ -121,18 +133,35 @@ class Hooks {
 			$languageCode = $wgLang->getCode();
 		}
 
-		foreach ($templatesToUpdate as $templateName) {
+		$properties = self::getSMWPropertyValuesForTitle($targetTitle);
 
-			// this is based on str search an regexp,
-			// it would be better if it extract properly semantic properties
-			if(strpos($targetContent, "SourceLanguage=none\n|Language=$languageCode\n|IsTranslation=0") !== false) {
-				continue;
+        foreach ($templatesToUpdate as $templateName) {
+
+            if ( array_key_exists("SourceLanguage", $properties) && $properties["SourceLanguage"][0] == 'none' 
+            && array_key_exists("Language", $properties) && $properties["Language"][0] == $languageCode 
+            && array_key_exists("IsTranslation", $properties) && $properties["IsTranslation"][0] == '0') {
+                continue;
+            }
+
+			$contentToBeAdded = '';
+
+			if( preg_match("/SourceLanguage=none/", $targetContent) == 0 ) {
+				$contentToBeAdded .= "SourceLanguage=none\n";
+			}
+
+			if( preg_match("/Language=$languageCode/", $targetContent) == 0 ) {
+				$contentToBeAdded .= "Language=$languageCode\n";
+			}
+
+			if( preg_match('/IsTranslation=0/', $targetContent) == 0 ) {
+				$contentToBeAdded .= "IsTranslation=0\n";
 			}
 
 			if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=none\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
+				$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
+
 			} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . "SourceLanguage=none\n|Language=$languageCode\n|IsTranslation=0\n|", $targetContent);
+				$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
 			}
 		}
 		$targetContent = str_replace("\r\n", "\n", $targetContent);
@@ -195,8 +224,6 @@ class Hooks {
 	public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor, $isWatch, $section, $flags, $revision, $status, $baseRevId ) {
 
 		self::checkAndMarkForTranslate($article->getTitle());
-		return true;
-
 	}
 
 	public static function checkAndMarkForTranslate (\Title $title) {
