@@ -120,51 +120,37 @@ class Hooks {
 	public static function onPageFormsWritePageData( $form, Title $targetTitle, & $targetContent ){
 		global $wgLang;
 
-		$templatesToUpdate = [
-				'Tuto Details',
-				'BlogPost',
-				'WikiPage',
-				'DescriptionDetails',
-				'Item',
-				'Group Details'
-		];
-		if ($targetTitle->exists()) {
-			$languageCode = $targetTitle->getPageLanguage()->getCode();
-		} else {
-			$languageCode = $wgLang->getCode();
-		}
+		$templateName = 'PageLang';
 
 		$properties = self::getSMWPropertyValuesForTitle($targetTitle);
 
-        foreach ($templatesToUpdate as $templateName) {
+        if ( array_key_exists("SourceLanguage", $properties) && $properties["SourceLanguage"][0] == 'none' 
+        && array_key_exists("Language", $properties) && $properties["Language"][0] == $languageCode 
+        && array_key_exists("IsTranslation", $properties) && $properties["IsTranslation"][0] == '0') {
+            continue;
+        }
 
-            if ( array_key_exists("SourceLanguage", $properties) && $properties["SourceLanguage"][0] == 'none' 
-            && array_key_exists("Language", $properties) && $properties["Language"][0] == $languageCode 
-            && array_key_exists("IsTranslation", $properties) && $properties["IsTranslation"][0] == '0') {
-                continue;
-            }
+		$contentToBeAdded = '';
 
-			$contentToBeAdded = '';
-
-			if( preg_match("/SourceLanguage=none/", $targetContent) == 0 ) {
-				$contentToBeAdded .= "SourceLanguage=none\n";
-			}
-
-			if( preg_match("/Language=$languageCode/", $targetContent) == 0 ) {
-				$contentToBeAdded .= "Language=$languageCode\n";
-			}
-
-			if( preg_match('/IsTranslation=0/', $targetContent) == 0 ) {
-				$contentToBeAdded .= "IsTranslation=0\n";
-			}
-
-			if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
-
-			} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
-				$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
-			}
+		if( preg_match("/SourceLanguage=none/", $targetContent) == 0 ) {
+			$contentToBeAdded .= "SourceLanguage=none\n";
 		}
+
+		if( preg_match("/Language=$languageCode/", $targetContent) == 0 ) {
+			$contentToBeAdded .= "Language=$languageCode\n";
+		}
+
+		if( preg_match('/IsTranslation=0/', $targetContent) == 0 ) {
+			$contentToBeAdded .= "IsTranslation=0\n";
+		}
+
+		if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
+			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
+
+		} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
+			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
+		}
+		
 		$targetContent = str_replace("\r\n", "\n", $targetContent);
 	}
 
