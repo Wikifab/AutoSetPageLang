@@ -122,7 +122,11 @@ class Hooks {
 
 		$templateName = 'PageLang';
 
-		$properties = self::getSMWPropertyValuesForTitle($targetTitle);
+		if ($targetTitle->exists()) {
+			$languageCode = $targetTitle->getPageLanguage()->getCode();
+		} else {
+			$languageCode = $wgLang->getCode();
+		}
 
 		$contentToBeAdded = '';
 
@@ -144,8 +148,6 @@ class Hooks {
 		} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
 			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
 		}
-
-		$targetContent = str_replace("\r\n", "\n", $targetContent);
 	}
 
 
