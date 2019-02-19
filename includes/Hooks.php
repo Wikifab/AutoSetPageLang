@@ -124,12 +124,6 @@ class Hooks {
 
 		$properties = self::getSMWPropertyValuesForTitle($targetTitle);
 
-        if ( array_key_exists("SourceLanguage", $properties) && $properties["SourceLanguage"][0] == 'none' 
-        && array_key_exists("Language", $properties) && $properties["Language"][0] == $languageCode 
-        && array_key_exists("IsTranslation", $properties) && $properties["IsTranslation"][0] == '0') {
-            continue;
-        }
-
 		$contentToBeAdded = '';
 
 		if( preg_match("/SourceLanguage=none/", $targetContent) == 0 ) {
@@ -150,7 +144,7 @@ class Hooks {
 		} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
 			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
 		}
-		
+
 		$targetContent = str_replace("\r\n", "\n", $targetContent);
 	}
 
