@@ -131,14 +131,29 @@ class Hooks {
 		$contentToBeAdded = '';
 
 		if( preg_match("/SourceLanguage=none/", $targetContent) == 0 ) {
+
+			if ($contentToBeAdded !== '') {
+				$contentToBeAdded .= '|';
+			}
+
 			$contentToBeAdded .= "SourceLanguage=none\n";
 		}
 
 		if( preg_match("/Language=$languageCode/", $targetContent) == 0 ) {
+
+			if ($contentToBeAdded !== '') {
+				$contentToBeAdded .= '|';
+			}
+
 			$contentToBeAdded .= "Language=$languageCode\n";
 		}
 
 		if( preg_match('/IsTranslation=0/', $targetContent) == 0 ) {
+
+			if ($contentToBeAdded !== '') {
+				$contentToBeAdded .= '|';
+			}
+			
 			$contentToBeAdded .= "IsTranslation=0\n";
 		}
 
