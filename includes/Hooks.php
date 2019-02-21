@@ -25,10 +25,10 @@ class Hooks {
 	 *
 	 */
 	public static function onPageContentInsertComplete(\WikiPage $wikiPage, User $user, $content, $summary, $isMinor, $isWatch, $section, $flags, Revision $revision ) {
-		global $wgLang;
+		global $wgLang, $wgAutoSetPageLangAllowedNamespaces;
 
 		// set page language to current language of user :
-		if ($wikiPage->getTitle()->getNamespace() == NS_MAIN && $wgLang) {
+		if (in_array($wikiPage->getTitle()->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) && $wgLang) {
 
 			$sourcePageTranslatable = \TranslatablePage::isTranslationPage( $wikiPage->getTitle() );
 			//var_dump($page); echo "<br/>";
@@ -55,6 +55,9 @@ class Hooks {
 			}
 			$specialLang->onSubmit($data);
 		}
+
+
+		return true;
 	}
 
 	public static function getPageLanguageFromContent(\WikitextContent $content) {
@@ -73,9 +76,9 @@ class Hooks {
 	 * @param array $bodyAttrs
 	 */
 	public static function onOutputPageBodyAttributes( \OutputPage $output, $skin, & $bodyAttrs ){
-		global $wgLang;
+		global $wgLang, $wgAutoSetPageLangAllowedNamespaces;
 		$pageTitle = $output->getTitle();
-		if ( ! $pageTitle || $pageTitle->getNamespace() != NS_MAIN) {
+		if ( ! $pageTitle || ! in_array($pageTitle->getNamespace(), $wgAutoSetPageLangAllowedNamespaces)) {
 			return ;
 		}
 
@@ -130,37 +133,25 @@ class Hooks {
 
 		$contentToBeAdded = '';
 
-		if( preg_match("/SourceLanguage=none/", $targetContent) == 0 ) {
+		if( preg_match("/\|SourceLanguage=/", $targetContent) == 0 ) {
 
-			if ($contentToBeAdded !== '') {
-				$contentToBeAdded .= '|';
-			}
-
-			$contentToBeAdded .= "SourceLanguage=none\n";
+			$contentToBeAdded .= "|SourceLanguage=none\n";
 		}
 
-		if( preg_match("/Language=$languageCode/", $targetContent) == 0 ) {
+		if( preg_match("/\|Language=/", $targetContent) == 0 ) {
 
-			if ($contentToBeAdded !== '') {
-				$contentToBeAdded .= '|';
-			}
-
-			$contentToBeAdded .= "Language=$languageCode\n";
+			$contentToBeAdded .= "|Language=$languageCode\n";
 		}
 
-		if( preg_match('/IsTranslation=0/', $targetContent) == 0 ) {
-
-			if ($contentToBeAdded !== '') {
-				$contentToBeAdded .= '|';
-			}
+		if( preg_match('/\|IsTranslation=/', $targetContent) == 0 ) {
 			
-			$contentToBeAdded .= "IsTranslation=0\n";
+			$contentToBeAdded .= "|IsTranslation=0\n";
 		}
 
-		if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*\|/', $targetContent, $match)) {
+		if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*/', $targetContent, $match)) {
 			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
 
-		} else if(preg_match('/\{\{' . $templateName . '([\s])*\|/', $targetContent, $match)) {
+		} else if(preg_match('/\{\{' . $templateName . '([\s])*/', $targetContent, $match)) {
 			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
 		}
 	}
@@ -225,12 +216,12 @@ class Hooks {
 	}
 
 	public static function checkAndMarkForTranslate (\Title $title) {
-		global $wgAutoSetPageLangAutoMarkTranslate;
+		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAllowedNamespaces;
 
 		if ( ! $wgAutoSetPageLangAutoMarkTranslate) {
 			return;
 		}
-		if ( $title->getNamespace() != NS_MAIN) {
+		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
 			return;
 		}
 

@@ -13,7 +13,8 @@
 	},
 	"config": {
 		"AutoSetPageLangAutoMarkTranslate": true,
-		"AutoSetPageLangTranslateOnCompleteOnly": true
+		"AutoSetPageLangTranslateOnCompleteOnly": true,
+		"AutoSetPageLangAllowedNamespaces": [0]
 	},
 	"Hooks": {
 		"PageContentInsertComplete": [
