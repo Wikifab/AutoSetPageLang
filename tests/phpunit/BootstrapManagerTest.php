@@ -20,12 +20,18 @@ use AutoSetPageLang\Hooks;
 class HooksTest extends \PHPUnit_Framework_TestCase {
 
 	protected $wgResourceModules = null;
+	protected $wgLang = null;
 
 	protected  $instance = null;
 
 	protected function setUp() {
 		parent::setUp();
 		$this->wgResourceModules = $GLOBALS['wgResourceModules'];
+
+		$this->wgLang = $GLOBALS['wgLang'];
+
+		// language preset for test purposes
+		$GLOBALS['wgLang'] = \Language::factory( 'fr' );	
 
 		// Preset with empty default values to verify the initialization status
 		// during invocation
@@ -48,7 +54,10 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	protected function tearDown() {
+
+		// set back to initial values
 		$GLOBALS['wgResourceModules'] = $this->wgResourceModules;
+		$GLOBALS['wgLang'] = $this->wgLang;
 		parent::tearDown();
 	}
 
@@ -76,13 +85,11 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 |Step_Title=debrouille toi vite
 }}
 {{ {{tntn|Notes}}}}
+{{ {{tntn|PageLang}}}}
 {{ {{tntn|Tuto Status}}}}";
 		$this->instance->onPageFormsWritePageData($form, $targetTitle, $targetContent);
 
 		$expectedContent = "{{ {{tntn|Tuto Details}}
-|SourceLanguage=fr
-|Language=fr
-|IsTranslation=0
 |Type=Technique
 |Area=Clothing and Accessories
 |Tags=test,
@@ -101,6 +108,11 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 |Step_Title=debrouille toi vite
 }}
 {{ {{tntn|Notes}}}}
+{{ {{tntn|PageLang}}
+|SourceLanguage=none
+|Language=fr
+|IsTranslation=0
+}}
 {{ {{tntn|Tuto Status}}}}";
 
 		$this->assertEquals($expectedContent, $targetContent);
@@ -131,13 +143,11 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 |Step_Title=debrouille toi vite
 }}
 {{Notes}}
+{{PageLang}}
 {{Tuto Status}}";
 		$this->instance->onPageFormsWritePageData($form, $targetTitle, $targetContent);
 
 		$expectedContent = "{{Tuto Details
-|SourceLanguage=fr
-|Language=fr
-|IsTranslation=0
 |Type=Technique
 |Area=Clothing and Accessories
 |Tags=test,
@@ -156,6 +166,11 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 |Step_Title=debrouille toi vite
 }}
 {{Notes}}
+{{PageLang
+|SourceLanguage=none
+|Language=fr
+|IsTranslation=0
+}}
 {{Tuto Status}}";
 
 		$this->assertEquals($expectedContent, $targetContent);

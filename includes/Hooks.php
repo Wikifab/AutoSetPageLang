@@ -149,10 +149,10 @@ class Hooks {
 		}
 
 		if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*/', $targetContent, $match)) {
-			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
+			$targetContent = str_replace($match[0], $match[0] . "\n" . $contentToBeAdded, $targetContent);
 
 		} else if(preg_match('/\{\{' . $templateName . '([\s])*/', $targetContent, $match)) {
-			$targetContent = str_replace($match[0], $match[0] . $contentToBeAdded, $targetContent);
+			$targetContent = str_replace($match[0], $match[0] . "\n" . $contentToBeAdded, $targetContent);
 		}
 	}
 
