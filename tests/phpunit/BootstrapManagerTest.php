@@ -176,4 +176,128 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expectedContent, $targetContent);
 	}
 
+	/**
+	 * Since the order of properties for PageLang might differ, also test with a 
+	 * different order. To do so, we assume Language is already set.
+	 */
+	public function testOnPageFormsWritePageDataWithTntnInDiffOrder( ) {
+
+		$form = null;
+		$targetTitle = new \Title();
+		$targetContent = "{{ {{tntn|Tuto Details}}
+|Type=Technique
+|Area=Clothing and Accessories
+|Tags=test,
+|Description=test de tuto en francais
+|Difficulty=Very easy
+|Cost=2
+|Currency=EUR (€)
+|Duration=3
+|Duration-type=minute(s)
+|Licences=Attribution (CC BY)
+}}
+{{ {{tntn|Introduction}}}}
+{{ {{tntn|Materials}}}}
+{{ {{tntn|Separator}}}}
+{{ {{tntn|Tuto Step}}
+|Step_Title=debrouille toi vite
+}}
+{{ {{tntn|Notes}}}}
+{{ {{tntn|PageLang}}
+|Language=de
+}}
+{{ {{tntn|Tuto Status}}}}";
+		$this->instance->onPageFormsWritePageData($form, $targetTitle, $targetContent);
+
+		//Language property should be last
+		$expectedContent = "{{ {{tntn|Tuto Details}}
+|Type=Technique
+|Area=Clothing and Accessories
+|Tags=test,
+|Description=test de tuto en francais
+|Difficulty=Very easy
+|Cost=2
+|Currency=EUR (€)
+|Duration=3
+|Duration-type=minute(s)
+|Licences=Attribution (CC BY)
+}}
+{{ {{tntn|Introduction}}}}
+{{ {{tntn|Materials}}}}
+{{ {{tntn|Separator}}}}
+{{ {{tntn|Tuto Step}}
+|Step_Title=debrouille toi vite
+}}
+{{ {{tntn|Notes}}}}
+{{ {{tntn|PageLang}}
+|SourceLanguage=none
+|IsTranslation=0
+|Language=de
+}}
+{{ {{tntn|Tuto Status}}}}";
+
+		$this->assertEquals($expectedContent, $targetContent);
+
+	}
+
+	public function testOnPageFormsWritePageDataWithoutTntnInDiffOrder( ) {
+
+		$form = null;
+		$targetTitle = new \Title();
+		$targetContent = "{{Tuto Details
+|Type=Technique
+|Area=Clothing and Accessories
+|Tags=test,
+|Description=test de tuto en francais
+|Difficulty=Very easy
+|Cost=2
+|Currency=EUR (€)
+|Duration=3
+|Duration-type=minute(s)
+|Licences=Attribution (CC BY)
+}}
+{{Introduction}}
+{{Materials}}
+{{Separator}}
+{{Tuto Step
+|Step_Title=debrouille toi vite
+}}
+{{Notes}}
+{{PageLang
+|Language=de
+}}
+{{Tuto Status}}";
+		$this->instance->onPageFormsWritePageData($form, $targetTitle, $targetContent);
+
+		var_dump($targetContent);
+
+		$expectedContent = "{{Tuto Details
+|Type=Technique
+|Area=Clothing and Accessories
+|Tags=test,
+|Description=test de tuto en francais
+|Difficulty=Very easy
+|Cost=2
+|Currency=EUR (€)
+|Duration=3
+|Duration-type=minute(s)
+|Licences=Attribution (CC BY)
+}}
+{{Introduction}}
+{{Materials}}
+{{Separator}}
+{{Tuto Step
+|Step_Title=debrouille toi vite
+}}
+{{Notes}}
+{{PageLang
+|SourceLanguage=none
+|IsTranslation=0
+|Language=de
+}}
+{{Tuto Status}}";
+
+		$this->assertEquals($expectedContent, $targetContent);
+	}
+
 }

@@ -149,10 +149,22 @@ class Hooks {
 		}
 
 		if(preg_match('/\{\{([\s])\{\{(tntn|Tntn)\|' . $templateName . '\}\}([\s])*/', $targetContent, $match)) {
-			$targetContent = str_replace($match[0], $match[0] . "\n" . $contentToBeAdded, $targetContent);
+
+			$breakline = '';
+			if($match[0][strlen($match[0])-1] != "\n") { //if no break line already
+				$breakline = "\n";
+			}
+
+			$targetContent = str_replace($match[0], $match[0] . $breakline . $contentToBeAdded, $targetContent);
 
 		} else if(preg_match('/\{\{' . $templateName . '([\s])*/', $targetContent, $match)) {
-			$targetContent = str_replace($match[0], $match[0] . "\n" . $contentToBeAdded, $targetContent);
+
+			$breakline = '';
+			if($match[0][strlen($match[0])-1] != "\n") { //if no break line already
+				$breakline = "\n";
+			}
+
+			$targetContent = str_replace($match[0], $match[0] . $breakline . $contentToBeAdded, $targetContent);
 		}
 	}
 
