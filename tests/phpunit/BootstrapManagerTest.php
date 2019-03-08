@@ -269,8 +269,6 @@ class HooksTest extends \PHPUnit_Framework_TestCase {
 {{Tuto Status}}";
 		$this->instance->onPageFormsWritePageData($form, $targetTitle, $targetContent);
 
-		var_dump($targetContent);
-
 		$expectedContent = "{{Tuto Details
 |Type=Technique
 |Area=Clothing and Accessories
