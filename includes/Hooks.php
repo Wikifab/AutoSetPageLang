@@ -45,7 +45,7 @@ class Hooks {
 
 			$specialLang = new SpecialPageLanguage();
 			$data = [
-					'pagename' => $wikiPage->getTitle()->getDBkey(),
+					'pagename' => $wikiPage->getTitle()->getFullText(),
 					'language' => $codeLang,
 					'selectoptions' => 0,
 					'reason' => 'Autoset Page Language'
