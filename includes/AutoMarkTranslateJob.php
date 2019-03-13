@@ -20,7 +20,7 @@ class AutoMarkTranslateJob extends Job {
 
 		// Load data from $this->params and $this->title
 
-		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
+		if ( ! in_array($this->title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
 			return;
 		}
 		
