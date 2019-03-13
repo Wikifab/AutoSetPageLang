@@ -15,11 +15,15 @@ class AutoMarkTranslateJob extends Job {
 	 * @return bool
 	 */
 	public function run() {
+
+		global $wgAutoSetPageLangAllowedNamespaces;
+
 		// Load data from $this->params and $this->title
 
-		if($this->title->getNamespace() != NS_MAIN) {
-			return true;
+		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
+			return;
 		}
+		
 		$revision = \Revision::newFromId($this->title->getLatestRevID());
 
 		if( ! $revision) {
