@@ -18,6 +18,7 @@ class FauxSpecialPageTranslation extends SpecialPageTranslation {
 		$fauxRequest = new \FauxRequest($data=[], $session);
 
 		$context = new \RequestContext();
+		$context->setUser(\FuzzyBot::getUser());
 		$context->setRequest($fauxRequest);
 		$this->getOutput()->setTitle($title);
 		$context->setOutput($this->getOutput());
