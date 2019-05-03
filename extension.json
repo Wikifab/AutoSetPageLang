@@ -53,10 +53,19 @@
 	"JobClasses": {
 		"autoMarkTranslate": "AutoSetPageLang\\AutoMarkTranslateJob"
 	},
+	"MessagesDirs": {
+		"MyExtension": [
+			"i18n"
+		]
+	},
 	"AutoloadClasses": {
 		"AutoSetPageLang\\Hooks": "includes/Hooks.php",
 		"AutoSetPageLang\\AutoMarkTranslateJob": "includes/AutoMarkTranslateJob.php",
-		"AutoSetPageLang\\FauxSpecialPageTranslation": "includes/FauxSpecialPageTranslation.php"
+		"AutoSetPageLang\\FauxSpecialPageTranslation": "includes/FauxSpecialPageTranslation.php",
+		"AutoSetPageLang\\SpecialSetPageLang": "includes/SpecialSetPageLang.php"
+	},
+	"SpecialPages": {
+		"SetPageLang" : "AutoSetPageLang\\SpecialSetPageLang"
 	},
 	"manifest_version": 1
 }
