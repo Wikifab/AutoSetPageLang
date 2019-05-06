@@ -45,9 +45,7 @@ class SpecialSetPageLang extends \SpecialPageLanguage {
 		}
 
 		// Url to redirect to after the operation
-		$this->goToUrl = $title->getFullUrlForRedirect(
-			$title->isRedirect() ? [ 'redirect' => 'no' ] : []
-		);
+		$this->goToUrl = $title->getFullUrlForRedirect();
 
 		return self::changePageLanguage(
 			$this->getContext(),
@@ -55,6 +53,11 @@ class SpecialSetPageLang extends \SpecialPageLanguage {
 			$newLanguage,
 			$data['reason'] === null ? '' : $data['reason']
 		);
+	}
+
+	public function onSuccess() {
+		// Success causes a redirect
+		$this->getOutput()->redirect( $this->goToUrl );
 	}
 
 	/**
@@ -138,10 +141,11 @@ class SpecialSetPageLang extends \SpecialPageLanguage {
 			'5::newlanguage' => $logNew
 		];
 		$entry = new \ManualLogEntry( 'pagelang', 'pagelang' );
+
 		$entry->setPerformer( $context->getUser() );
 		$entry->setTarget( $title );
 		$entry->setParameters( $logParams );
-		$entry->setComment( $reason );
+		$entry->setComment( $context->getUser()->getName() );
 		$entry->setTags( $tags );
 
 		$logid = $entry->insert();
@@ -167,7 +171,7 @@ class SpecialSetPageLang extends \SpecialPageLanguage {
 
 			$content = $wiki->getContent()->getNativeData();
 
-			$content = preg_replace('/Language=(.*)/', 'Language=' . $newLanguage, $content);
+			$content = preg_replace('/\bLanguage\b=(.*)/', 'Language=' . $newLanguage, $content);
 
 			$content = \ContentHandler::makeContent( $content, $wiki->getTitle() );
 
