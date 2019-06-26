@@ -51,7 +51,7 @@ class AutoMarkTranslateJob extends Job {
 
 			$specialPageTranslation->markPage($this->title);
 
-			Hooks::run( 'AutoSetPageLangMarkForTranslation', [ $this->title ] );
+			\Hooks::run( 'AutoSetPageLangMarkForTranslation', [ $this->title ] );
 		}
 		return true;
 	}
