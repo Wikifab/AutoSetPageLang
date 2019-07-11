@@ -13,10 +13,13 @@ use WikitextContent;
 class Hooks {
 
 	public static function onBeforePageDisplay($output) {
+		global $wgAutoSetPageLangAutoMarkTranslate;
 
-		$output->addModuleStyles( [
+		if($wgAutoSetPageLangAutoMarkTranslate) {
+			$output->addModuleStyles( [
 				'ext.autosetpagelang'
-		] );
+			] );
+		}
 	}
 
 	/**
