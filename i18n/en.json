@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"j-perl"
+		]
+	},
+	"setpagelang": "Change the page's language",
+	"markfortranslation": "Enable traduction"
+}
