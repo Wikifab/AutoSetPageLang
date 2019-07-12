@@ -15,7 +15,11 @@ class Hooks {
 	public static function onBeforePageDisplay($output) {
 		global $wgAutoSetPageLangAutoMarkTranslate;
 
-		if($wgAutoSetPageLangAutoMarkTranslate) {
+		$title = $output->getTitle();
+		$page = TranslatablePage::newFromTitle( $title );
+		$marked = $page->getMarkedTag();
+
+		if($wgAutoSetPageLangAutoMarkTranslate || (!$wgAutoSetPageLangAutoMarkTranslate && !$marked)) {
 			$output->addModuleStyles( [
 				'ext.autosetpagelang'
 			] );
@@ -324,6 +328,14 @@ class Hooks {
 	static function displayTab2( $obj, &$links ) {
 		// the old '$content_actions' array is thankfully just a
 		// sub-array of this one
+		
+		$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $obj->getTitle()->getFullText(), 'do' => 'mark']);
+		$links['views']['markfortranslation'] = array(
+			'class' => 'markfortranslation-button',
+			'text' => 'Activer la traduction',
+			'href' =>  $url
+		);
+
 		return self::displayTab( $obj, $links['views'] );
 	}
 }
