@@ -237,7 +237,10 @@ class Hooks {
 	public static function checkAndMarkForTranslate (\Title $title) {
 		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAllowedNamespaces;
 
-		if ( ! $wgAutoSetPageLangAutoMarkTranslate) {
+		$page = TranslatablePage::newFromTitle( $title );
+		$marked = $page->getMarkedTag();
+
+		if ( ! $wgAutoSetPageLangAutoMarkTranslate && !$marked) {
 			return;
 		}
 		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
