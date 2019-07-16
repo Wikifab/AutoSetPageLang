@@ -325,9 +325,13 @@ class Hooks {
 
 	}
 
+	/**
+	 * Add an action to activate the translation
+	 * @param $obj
+	 * @param $links
+	 * @return bool
+	 */
 	static function displayTab2( $obj, &$links ) {
-		// the old '$content_actions' array is thankfully just a
-		// sub-array of this one
 		
 		$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $obj->getTitle()->getFullText(), 'do' => 'mark']);
 		$links['views']['markfortranslation'] = array(
