@@ -233,19 +233,16 @@ class Hooks {
 
 		$page = TranslatablePage::newFromTitle( $title );
 		$marked = $page->getMarkedTag();
-		$ready = $page->getReadyTag();
-		$latest = $title->getLatestRevID();
-		$hasChanges = $ready === $latest && $marked !== $latest;
 
-		if ( ! $wgAutoSetPageLangAutoMarkTranslate && !$marked && !$hasChanges) {
+		if($wgAutoSetPageLangAutoMarkTranslate || (!$wgAutoSetPageLangAutoMarkTranslate && $marked)){
+			if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
+				return;
+			}
+			$job = new AutoMarkTranslateJob( $title, [] );
+			JobQueueGroup::singleton()->push( $job );
+		} else {
 			return;
 		}
-		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
-			return;
-		}
-
-		$job = new AutoMarkTranslateJob( $title, [] );
-		JobQueueGroup::singleton()->push( $job );
 	}
 
 	/**
