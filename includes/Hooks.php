@@ -332,13 +332,19 @@ class Hooks {
 	 * @return bool
 	 */
 	static function displayTab2( $obj, &$links ) {
+
+		$title = $obj->getTitle();
+		$page = TranslatablePage::newFromTitle( $title );
+		$marked = $page->getMarkedTag();
 		
-		$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $obj->getTitle()->getFullText(), 'do' => 'mark']);
-		$links['views']['markfortranslation'] = array(
-			'class' => 'markfortranslation-button',
-			'text' => 'Activer la traduction',
-			'href' =>  $url
-		);
+		if(!$marked){
+			$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $title->getFullText(), 'do' => 'mark']);
+			$links['views']['markfortranslation'] = array(
+				'class' => 'markfortranslation-button',
+				'text' => 'Activer la traduction',
+				'href' =>  $url
+			);
+		}
 
 		return self::displayTab( $obj, $links['views'] );
 	}
