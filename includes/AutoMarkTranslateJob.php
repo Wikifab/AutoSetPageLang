@@ -16,7 +16,7 @@ class AutoMarkTranslateJob extends Job {
 	 */
 	public function run() {
 
-		global $wgAutoSetPageLangAllowedNamespaces;
+		global $wgAutoSetPageLangAllowedNamespaces, $wgAutoSetPageLangTranslateOnCompleteOnly;
 
 		// Load data from $this->params and $this->title
 
@@ -42,6 +42,10 @@ class AutoMarkTranslateJob extends Job {
 				$isComplete = true;
 				break;
 			}
+		}
+
+		if(!$wgAutoSetPageLangTranslateOnCompleteOnly){
+			$isComplete = true;
 		}
 
 		// check that content contain "Complete=Yes"

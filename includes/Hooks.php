@@ -15,15 +15,9 @@ class Hooks {
 	public static function onBeforePageDisplay($output) {
 		global $wgAutoSetPageLangAutoMarkTranslate;
 
-		$title = $output->getTitle();
-		$page = TranslatablePage::newFromTitle( $title );
-		$marked = $page->getMarkedTag();
-
-		if($wgAutoSetPageLangAutoMarkTranslate || (!$wgAutoSetPageLangAutoMarkTranslate && !$marked)) {
-			$output->addModuleStyles( [
-				'ext.autosetpagelang'
-			] );
-		}
+		$output->addModuleStyles( [
+			'ext.autosetpagelang'
+		] );
 	}
 
 	/**
@@ -239,8 +233,11 @@ class Hooks {
 
 		$page = TranslatablePage::newFromTitle( $title );
 		$marked = $page->getMarkedTag();
+		$ready = $page->getReadyTag();
+		$latest = $title->getLatestRevID();
+		$hasChanges = $ready === $latest && $marked !== $latest;
 
-		if ( ! $wgAutoSetPageLangAutoMarkTranslate && !$marked) {
+		if ( ! $wgAutoSetPageLangAutoMarkTranslate && !$marked && !$hasChanges) {
 			return;
 		}
 		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
