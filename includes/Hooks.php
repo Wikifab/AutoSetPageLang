@@ -329,12 +329,13 @@ class Hooks {
 	 * @return bool
 	 */
 	static function displayTab2( $obj, &$links ) {
+		global $wgAutoSetPageLangAutoMarkTranslate;
 
 		$title = $obj->getTitle();
 		$page = TranslatablePage::newFromTitle( $title );
 		$marked = $page->getMarkedTag();
 		
-		if(!$marked){
+		if(!$wgAutoSetPageLangAutoMarkTranslate && !$marked){
 			$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $title->getFullText(), 'do' => 'mark']);
 			$links['views']['markfortranslation'] = array(
 				'class' => 'markfortranslation-button',
