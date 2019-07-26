@@ -50,6 +50,8 @@ class AutoMarkTranslateJob extends Job {
 			$specialPageTranslation = new FauxSpecialPageTranslation();
 
 			$specialPageTranslation->markPage($this->title);
+
+			\Hooks::run( 'AutoSetPageLangMarkForTranslation', [ $this->title ] );
 		}
 		return true;
 	}
