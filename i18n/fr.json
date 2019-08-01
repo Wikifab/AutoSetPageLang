@@ -4,5 +4,6 @@
 			"j-perl"
 		]
 	},
-	"setpagelang": "Changer la langue de la page"
+	"setpagelang": "Changer la langue de la page",
+	"markfortranslation": "Activer la traduction"
 }

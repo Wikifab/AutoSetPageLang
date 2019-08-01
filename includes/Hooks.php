@@ -15,7 +15,7 @@ class Hooks {
 	public static function onBeforePageDisplay($output) {
 
 		$output->addModuleStyles( [
-				'ext.autosetpagelang'
+			'ext.autosetpagelang'
 		] );
 	}
 
@@ -230,13 +230,17 @@ class Hooks {
 	public static function checkAndMarkForTranslate (\Title $title) {
 		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAllowedNamespaces;
 
-		if ( ! $wgAutoSetPageLangAutoMarkTranslate) {
-			return;
-		}
-		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
+		$page = TranslatablePage::newFromTitle( $title );
+		$marked = $page->getMarkedTag();
+
+		if(!$wgAutoSetPageLangAutoMarkTranslate && !$marked){
 			return;
 		}
 
+		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
+			return;
+		}
+		
 		$job = new AutoMarkTranslateJob( $title, [] );
 		JobQueueGroup::singleton()->push( $job );
 	}
@@ -318,9 +322,28 @@ class Hooks {
 
 	}
 
+	/**
+	 * Add an action to activate the translation
+	 * @param $obj
+	 * @param $links
+	 * @return bool
+	 */
 	static function displayTab2( $obj, &$links ) {
-		// the old '$content_actions' array is thankfully just a
-		// sub-array of this one
+		global $wgAutoSetPageLangAutoMarkTranslate;
+
+		$title = $obj->getTitle();
+		$page = TranslatablePage::newFromTitle( $title );
+		$marked = $page->getMarkedTag();
+		
+		if(!$wgAutoSetPageLangAutoMarkTranslate && !$marked){
+			$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $title->getFullText(), 'do' => 'mark']);
+			$links['views']['markfortranslation'] = array(
+				'class' => 'markfortranslation-button',
+				'text' => 'Activer la traduction',
+				'href' =>  $url
+			);
+		}
+
 		return self::displayTab( $obj, $links['views'] );
 	}
 }
