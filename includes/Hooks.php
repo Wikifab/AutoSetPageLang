@@ -271,10 +271,10 @@ class Hooks {
 
 
 		$marked = $page->getMarkedTag();
-		$isSourcePage = TranslatablePage::isSourcePage($title);
+		$isTranslatedPage = TranslatablePage::isTranslationPage($title);
 
 		$actions = [];
-		if ( $isSourcePage && ! $marked  ) {
+		if ( !$isTranslatedPage && !$marked  ) {
 			// if not marked as translatable, do not show tab
 			return true;
 		}
