@@ -271,24 +271,25 @@ class Hooks {
 
 
 		$marked = $page->getMarkedTag();
+		$isSourcePage = TranslatablePage::isSourcePage($title);
 
 		$actions = [];
-		if ( ! $marked  ) {
+		if ( $isSourcePage && ! $marked  ) {
 			// if not marked as translatable, do not show tab
 			return true;
 		}
 
 
-		$langCode = $obj->getLanguage()->getCode();
+		$langCode = $page->getSourceLanguageCode();
+		$sourcePageTitle = explode('/', $page->getMessageGroupId())[0];
 
 		$translatePage = SpecialPage::getTitleFor( 'Translate' );
 		$url = $translatePage->getLinkURL( [
-						'group' => $page->getMessageGroupId(),
+						'group' => $sourcePageTitle,
 						'language' => $langCode,
 						'action' => 'page',
 						'filter' => '',
 				], false );
-
 
 		$translate_tab = array(
 				'text' => wfMessage( 'tpt-tab-translate' )->text(),
@@ -332,9 +333,13 @@ class Hooks {
 		global $wgAutoSetPageLangAutoMarkTranslate;
 
 		$title = $obj->getTitle();
+		$isTranslatedPage = TranslatablePage::isTranslationPage($title);
+		if($isTranslatedPage){
+			return self::displayTab( $obj, $links['views'] );
+		}
+
 		$page = TranslatablePage::newFromTitle( $title );
 		$marked = $page->getMarkedTag();
-		
 		if(!$wgAutoSetPageLangAutoMarkTranslate && !$marked){
 			$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $title->getFullText(), 'do' => 'mark']);
 			$links['views']['markfortranslation'] = array(
