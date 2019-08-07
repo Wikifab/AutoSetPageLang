@@ -329,7 +329,11 @@ class Hooks {
 	 * @return bool
 	 */
 	static function displayTab2( $obj, &$links ) {
-		global $wgAutoSetPageLangAutoMarkTranslate;
+		global $wgAutoSetPageLangAutoMarkTranslate, $wgUser;
+
+		if($wgUser->isAnon()){
+			return;
+		}
 
 		$title = $obj->getTitle();
 		$page = TranslatablePage::newFromTitle( $title );
