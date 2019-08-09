@@ -281,7 +281,10 @@ class Hooks {
 
 
 		$langCode = $page->getSourceLanguageCode();
-		$sourcePageTitle = explode('/', $page->getMessageGroupId())[0];
+		$sourcePageTitle = $page->getMessageGroupId();
+		if(strpos($sourcePageTitle, '/'.$langCode)){
+			$sourcePageTitle = str_replace('/'.$langCode, '', $sourcePageTitle);
+		}
 
 		$translatePage = SpecialPage::getTitleFor( 'Translate' );
 		$url = $translatePage->getLinkURL( [
