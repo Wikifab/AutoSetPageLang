@@ -331,7 +331,7 @@ class Hooks {
 	static function displayTab2( $obj, &$links ) {
 		global $wgAutoSetPageLangAutoMarkTranslate, $wgUser;
 
-		if($wgUser->isAnon()){
+		if(!$wgUser->isAllowed('translate')){
 			return;
 		}
 
