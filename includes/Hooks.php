@@ -351,7 +351,7 @@ class Hooks {
 			$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $title->getFullText(), 'do' => 'mark']);
 			$links['views']['markfortranslation'] = array(
 				'class' => 'markfortranslation-button',
-				'text' => 'Activer la traduction',
+				'text' => wfMessage( 'markfortranslation' )->text(),
 				'href' =>  $url
 			);
 		}
