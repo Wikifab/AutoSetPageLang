@@ -144,7 +144,7 @@ class Hooks {
 		}
 
 		if( preg_match('/\|IsTranslation=/', $targetContent) == 0 ) {
-			
+
 			$contentToBeAdded .= "|IsTranslation=0\n";
 		}
 
@@ -228,7 +228,7 @@ class Hooks {
 	}
 
 	public static function checkAndMarkForTranslate (\Title $title) {
-		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAllowedNamespaces;
+		global $wgAutoSetPageLangAutoMarkTranslate,$wgAutoSetPageLangQueueJobs, $wgAutoSetPageLangAllowedNamespaces;
 
 		$page = TranslatablePage::newFromTitle( $title );
 		$marked = $page->getMarkedTag();
@@ -240,9 +240,13 @@ class Hooks {
 		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
 			return;
 		}
-		
+
 		$job = new AutoMarkTranslateJob( $title, [] );
-		JobQueueGroup::singleton()->push( $job );
+		if (isset($wgAutoSetPageLangQueueJobs) && $wgAutoSetPageLangQueueJobs) {
+			JobQueueGroup::singleton()->push( $job );
+		} else {
+			$job->run();
+		}
 	}
 
 	/**
