@@ -2,6 +2,8 @@
 
 namespace AutoSetPageLang;
 
+use PermissionsError;
+
 /**
  * Special page for changing the content language of a page
  *
@@ -35,13 +37,15 @@ class SpecialSetPageLang extends \SpecialPageLanguage {
 		}
 
 		// Check permissions and make sure the user has permission to edit the page
-		$errors = $title->getUserPermissionsErrors( 'edit', $this->getUser() );
-
+		if ( class_exists( 'MediaWiki\Permissions\PermissionManager' ) ) {
+			// MW 1.33+
+			$permManager = MediaWikiServices::getInstance()->getPermissionManager();
+			$errors = $permManager->getPermissionErrors( 'edit', $this->getUser(), $title );
+		} else {
+			$errors = $title->getUserPermissionsErrors( 'edit', $this->getUser()	);
+		}
 		if ( $errors ) {
-			$out = $this->getOutput();
-			$wikitext = $out->formatPermissionsErrorMessage( $errors );
-			// Hack to get our wikitext parsed
-			return \Status::newFatal( new \RawMessage( '$1', [ $wikitext ] ) );
+			throw new PermissionsError( 'import', $errors );
 		}
 
 		// Url to redirect to after the operation
