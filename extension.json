@@ -14,7 +14,7 @@
 	"config": {
 		"AutoSetPageLangAutoMarkTranslate": true,
 		"AutoSetPageLangTranslateOnCompleteOnly": true,
-		"AutoSetPageLangAllowedNamespaces": [0]
+		"AutoSetPageLangAllowedNamespaces": []
 	},
 	"Hooks": {
 		"PageContentInsertComplete": [
