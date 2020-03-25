@@ -16,14 +16,14 @@ class AutoMarkTranslateJob extends Job {
 	 */
 	public function run() {
 
-		global $wgAutoSetPageLangAllowedNamespaces, $wgAutoSetPageLangTranslateOnCompleteOnly;
+		global $wgAutoSetPageLangAutoMarkNamespaces, $wgAutoSetPageLangTranslateOnCompleteOnly;
 
 		// Load data from $this->params and $this->title
 
-		if ( ! in_array($this->title->getNamespace(), $wgAutoSetPageLangAllowedNamespaces) ) {
+		if ( ! in_array($this->title->getNamespace(), $wgAutoSetPageLangAutoMarkNamespaces) ) {
 			return;
 		}
-		
+
 		$revision = \Revision::newFromId($this->title->getLatestRevID());
 
 		if( ! $revision) {
