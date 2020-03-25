@@ -337,21 +337,24 @@ class Hooks {
 	 * @return bool
 	 */
 	static function displayTab2( $obj, &$links ) {
-		global $wgAutoSetPageLangAutoMarkTranslate, $wgUser;
+		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAutoMarkNamespaces, $wgUser;
 
 		if(!$wgUser->isAllowed('translate')){
 			return;
 		}
+
+
 
 		$title = $obj->getTitle();
 		$isTranslatedPage = TranslatablePage::isTranslationPage($title);
 		if($isTranslatedPage){
 			return self::displayTab( $obj, $links['views'] );
 		}
+		$autoMarkEnable = $wgAutoSetPageLangAutoMarkTranslate && in_array($title->getNamespace(), $wgAutoSetPageLangAutoMarkNamespaces);
 
 		$page = TranslatablePage::newFromTitle( $title );
 		$marked = $page->getMarkedTag();
-		if(!$wgAutoSetPageLangAutoMarkTranslate && !$marked){
+		if(!$autoMarkEnable && !$marked){
 			$url = SpecialPage::getSafeTitleFor('PageTranslation')->getFullUrl(['target' => $title->getFullText(), 'do' => 'mark']);
 			$links['views']['markfortranslation'] = array(
 				'class' => 'markfortranslation-button',
