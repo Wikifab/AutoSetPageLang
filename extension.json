@@ -15,7 +15,8 @@
 		"AutoSetPageLangAutoMarkTranslate": true,
 		"AutoSetPageLangAutoMarkNamespaces": [],
 		"AutoSetPageLangTranslateOnCompleteOnly": true,
-		"AutoSetPageLangAllowedNamespaces": []
+		"AutoSetPageLangAllowedNamespaces": [],
+		"AutoSetPageLangAddNoIncludeTagsNamespaces": []
 	},
 	"Hooks": {
 		"PageContentInsertComplete": [
@@ -60,6 +61,7 @@
 		]
 	},
 	"AutoloadClasses": {
+		"AutoSetPageLang\\Tools\\AddNoIncludeTag": "includes/tools/AddNoIncludeTag.php",
 		"AutoSetPageLang\\Hooks": "includes/Hooks.php",
 		"AutoSetPageLang\\AutoMarkTranslateJob": "includes/AutoMarkTranslateJob.php",
 		"AutoSetPageLang\\FauxSpecialPageTranslation": "includes/FauxSpecialPageTranslation.php",

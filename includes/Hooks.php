@@ -1,6 +1,7 @@
 <?php
 namespace AutoSetPageLang;
 
+use AutoSetPageLang\Tools\AddNoIncludeTag;
 use JobQueueGroup;
 use Revision;
 use SpecialPageLanguage;
@@ -180,7 +181,7 @@ class Hooks {
 	 * @param unknown $flags
 	 */
 	public static function onPageContentSave( &$wikipage, &$user, &$content, &$summary, $flags){
-		global $wgAutoSetPageLangTranslateOnCompleteOnly;
+		global $wgAutoSetPageLangTranslateOnCompleteOnly, $wgAutoSetPageLangAddNoIncludeTagsNamespaces;
 
 		if ($content instanceof WikitextContent) {
 			$text = $content->getNativeData();
@@ -200,6 +201,12 @@ class Hooks {
 				$text = preg_replace("/\\|SourceLanguage=([a-zA-Z-]+)\n/", "|SourceLanguage=$sourceLanguage\n", $text);
 				$text = preg_replace("/\\|Language=([a-zA-Z-]+)\n/", "|Language=$languageCode\n", $text);
 				$text = preg_replace("/\\|IsTranslation=([a-zA-Z-0-9]+)\n/", "|IsTranslation=1\n", $text);
+			}
+
+			$nsId = $wikipage->getTitle()->getNamespace();
+			if ($wgAutoSetPageLangAddNoIncludeTagsNamespaces && in_array($nsId, $wgAutoSetPageLangAddNoIncludeTagsNamespaces) ) {
+				$noIncludeTagInserter = new AddNoIncludeTag();
+				$text = $noIncludeTagInserter->addTag($text);
 			}
 
 			if ($wgAutoSetPageLangTranslateOnCompleteOnly) {
