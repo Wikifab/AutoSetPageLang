@@ -235,12 +235,12 @@ class Hooks {
 	}
 
 	public static function checkAndMarkForTranslate (\Title $title) {
-		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAutoUpdateNamespaces, $wgAutoSetPageLangQueueJobs, $wgAutoSetPageLangAllowedNamespaces;
+		global $wgAutoSetPageLangAutoMarkTranslate, $wgAutoSetPageLangAutoMarkNamespaces, $wgAutoSetPageLangAutoUpdateNamespaces, $wgAutoSetPageLangQueueJobs, $wgAutoSetPageLangAllowedNamespaces;
 
 		$page = TranslatablePage::newFromTitle( $title );
 
 
-		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAutoMarkTranslate)
+		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAutoMarkNamespaces)
 				&& ! in_array($title->getNamespace(), $wgAutoSetPageLangAutoUpdateNamespaces) ) {
 			return;
 		}
@@ -252,7 +252,7 @@ class Hooks {
 			return;
 		}
 
-		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAutoMarkTranslate) && !$marked) {
+		if ( ! in_array($title->getNamespace(), $wgAutoSetPageLangAutoMarkNamespaces) && !$marked) {
 			return;
 		}
 		// we launch job if page in $wgAutoSetPageLangAutoMarkTranslate
