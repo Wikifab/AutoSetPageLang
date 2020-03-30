@@ -14,6 +14,7 @@
 	"config": {
 		"AutoSetPageLangAutoMarkTranslate": true,
 		"AutoSetPageLangAutoMarkNamespaces": [],
+		"AutoSetPageLangAutoUpdateNamespaces": [],
 		"AutoSetPageLangTranslateOnCompleteOnly": true,
 		"AutoSetPageLangAllowedNamespaces": [],
 		"AutoSetPageLangAddNoIncludeTagsNamespaces": []

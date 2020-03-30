@@ -12,15 +12,21 @@ class AutoMarkTranslateJob extends Job {
 	/**
 	 * Execute the job
 	 *
+	 * This job will mark the page for translation, there is 2 possible cases :
+	 * - if the page is in namespace $wgAutoSetPageLangAutoMarkNamespaces
+	 * - if the page is already marked (in previous revision) and is in the namespace
+	 *
 	 * @return bool
 	 */
 	public function run() {
 
-		global $wgAutoSetPageLangAutoMarkNamespaces, $wgAutoSetPageLangTranslateOnCompleteOnly;
+		global $wgAutoSetPageLangAutoMarkNamespaces, $wgAutoSetPageLangTranslateOnCompleteOnly,
+			$wgAutoSetPageLangAutoUpdateNamespaces;
 
 		// Load data from $this->params and $this->title
 
-		if ( ! in_array($this->title->getNamespace(), $wgAutoSetPageLangAutoMarkNamespaces) ) {
+		if ( ! in_array($this->title->getNamespace(), $wgAutoSetPageLangAutoMarkNamespaces)
+				&& ! in_array($this->title->getNamespace(), $wgAutoSetPageLangAutoUpdateNamespaces)) {
 			return;
 		}
 

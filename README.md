@@ -41,9 +41,22 @@ To disable remove translate tags on all tutorial not complete :
 $wgAutoSetPageLangTranslateOnCompleteOnly = false;
 ```
 
-To set allowed namespaces : 
+Namespace where page must be auto mark for translation :  to set allowed namespaces : 
+/!\ DeprecatedVariable use other below
 ```
 $wgAutoSetPageLangAllowedNamespaces
 ```
+default : []
 
-default : NS_MAIN (0)
+Namespace where page must be auto mark for translation after edition :  to set namespaces : 
+```
+$wgAutoSetPageLangAutoMarkNamespaces
+```
+default : []
+
+Namespace where page translation must be auto-updated at each edition (if allready marked) :  to set namespaces : 
+```
+$wgAutoSetPageLangAutoUpdateNamespaces
+```
+
+default : []
